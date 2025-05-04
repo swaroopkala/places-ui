@@ -1,1 +1,122 @@
-<p>form works!</p>
+<!-- address-search.component.html -->
+<div class="form-container">
+  <h2 class="form-title">Address Search</h2>
+
+  <form [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+    <!-- Address Search Bar at the top with debouncing -->
+    <div class="search-bar-container">
+      <div class="search-bar">
+        <input
+          type="text"
+          id="addressSearch"
+          formControlName="addressSearch"
+          placeholder="Search for an address..."
+          class="search-input"
+        />
+        <button type="button" class="search-icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="search-status" *ngIf="debouncedSearchValue">
+        Searching for: "{{ debouncedSearchValue }}"
+      </div>
+    </div>
+
+    <!-- Username field -->
+    <div class="form-field">
+      <label for="username">Username</label>
+      <input
+        type="text"
+        id="username"
+        formControlName="username"
+        placeholder="Enter username"
+      />
+    </div>
+
+    <div class="address-section">
+      <h3 class="section-title">Address Information</h3>
+
+      <div class="address-fields">
+        <div class="form-field">
+          <label for="country">Country</label>
+          <input
+            type="text"
+            id="country"
+            formControlName="country"
+            placeholder="Country"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="street">Street Address</label>
+          <input
+            type="text"
+            id="street"
+            formControlName="street"
+            placeholder="Street address"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="city">City</label>
+          <input
+            type="text"
+            id="city"
+            formControlName="city"
+            placeholder="City"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="state">State/Province</label>
+          <input
+            type="text"
+            id="state"
+            formControlName="state"
+            placeholder="State or province"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="postalCode">Postal Code</label>
+          <input
+            type="text"
+            id="postalCode"
+            formControlName="postalCode"
+            placeholder="Postal code"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="button-container">
+      <button type="submit" class="search-button">Search</button>
+    </div>
+  </form>
+
+  <!-- Debug information - you can remove this in production -->
+  <div class="debug-section">
+    <details>
+      <summary>Debug Information</summary>
+      <div class="debug-content">
+        <p class="debug-title">Form Values:</p>
+        <pre>{{ searchForm.value | json }}</pre>
+        <p class="debug-title">Debounced Search Value: (updates after 500ms)</p>
+        <pre>{{ debouncedSearchValue }}</pre>
+      </div>
+    </details>
+  </div>
+</div>

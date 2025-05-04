@@ -2,6 +2,36 @@
 <div class="form-container">
   <h2 class="form-title">Address Search</h2>
 
+  <!-- Error Banner -->
+  <div *ngIf="showError" class="error-banner" [ngClass]="{'error-banner--warning': errorType === 'warning', 'error-banner--error': errorType === 'error', 'error-banner--info': errorType === 'info'}">
+    <div class="error-banner__content">
+      <div class="error-banner__icon">
+        <svg *ngIf="errorType === 'error'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <svg *ngIf="errorType === 'warning'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+        <svg *ngIf="errorType === 'info'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+      </div>
+      <div class="error-banner__message">{{ errorMessage }}</div>
+      <button class="error-banner__close" (click)="hideError()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+
   <form [formGroup]="searchForm" (ngSubmit)="onSubmit()">
     <!-- Address Search Bar at the top with debouncing -->
     <div class="search-bar-container">
@@ -12,6 +42,7 @@
           formControlName="addressSearch"
           placeholder="Search for an address..."
           class="search-input"
+          (blur)="closeDropdown()"
         />
         <button type="button" class="search-icon">
           <svg
@@ -29,6 +60,16 @@
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
         </button>
+      </div>
+      <!-- Autocomplete dropdown -->
+      <div class="autocomplete-dropdown" *ngIf="showDropdown && autocompleteResults.length > 0">
+        <ul class="autocomplete-list">
+          <li *ngFor="let place of autocompleteResults" 
+              class="autocomplete-item" 
+              (mousedown)="selectPlace(place); $event.preventDefault()">
+            {{ place.description }}
+          </li>
+        </ul>
       </div>
       <div class="search-status" *ngIf="debouncedSearchValue">
         Searching for: "{{ debouncedSearchValue }}"
@@ -89,26 +130,16 @@
             placeholder="State or province"
           />
         </div>
-
-        <div class="form-field">
-          <label for="postalCode">Postal Code</label>
-          <input
-            type="text"
-            id="postalCode"
-            formControlName="postalCode"
-            placeholder="Postal code"
-          />
-        </div>
       </div>
     </div>
 
-    <div class="button-container">
+    <!-- <div class="button-container">
       <button type="submit" class="search-button">Search</button>
-    </div>
+    </div> -->
   </form>
 
   <!-- Debug information - you can remove this in production -->
-  <div class="debug-section">
+  <!-- <div class="debug-section">
     <details>
       <summary>Debug Information</summary>
       <div class="debug-content">
@@ -118,5 +149,5 @@
         <pre>{{ debouncedSearchValue }}</pre>
       </div>
     </details>
-  </div>
+  </div> -->
 </div>
